@@ -10,8 +10,37 @@
 
 ## Kế hoạch làm việc:
 
-| **Tuần**  | **Thời gian** | **Công việc** | **Người thực hiện** |
-| ------------- | ------------- | ------------- | ------------- |
-| 1  | 15/04 - 22/04 | - Mỗi người tìm hiểu và đưa ra đề tài nhóm sẽ thực hiện.   
-- Trao đổi và thống nhất đề tài. | Đức Hòa  Gia Thuận  Hoàng Sinh| 
-
+<table>
+<thead>
+  <tr>
+    <th>Tuần</th>
+    <th>Thời gian</th>
+    <th>Công việc</th>
+    <th>Người thực hiện</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td rowspan="1">1</td>
+    <td>15/04-22/04</td>
+    <td>- Mỗi người tìm hiểu và đưa ra đề tài nhóm sẽ thực hiện.<br>- Trao đổi và thống nhất đề tài.</td>
+    <td>Đức Hòa<br> Gia Thuận<br> Hoàng Sinh</td>
+  </tr>
+  <tr>
+    <td rowspan="3">2</td>
+    <td>22/04-26/04</td>
+    <td>Mỗi người soạn một phiên bản cho phần 1</td>
+    <td>Đức Hòa<br> Gia Thuận<br> Hoàng Sinh</td>
+  </tr>
+  <tr>
+    <td>26/04-28/04</td>
+    <td>- Trao đổi những gì đã tìm hiểu, các phiên bản.<br>- Tổng hợp nội dung phần 1 vào file báo cáo. (Đức Hòa)</td>
+    <td>Đức Hòa<br> Gia Thuận<br> Hoàng Sinh</td>
+  </tr>
+    <tr>
+    <td>29/04</td>
+    <td>Báo cáo tiến độ lần 1</td>
+    <td>Đức Hòa</td>
+  </tr>
+</tbody>
+</table>

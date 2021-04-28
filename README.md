@@ -12,8 +12,6 @@
 
 | **Tuần**  | **Thời gian** | **Công việc** | **Người thực hiện** |
 | ------------- | ------------- | ------------- | ------------- |
-| 1  | 15/04 - 22/04 | - Mỗi người tìm hiểu và đưa ra đề tài nhóm sẽ thực hiện.<space><space> 
-- Trao đổi và thống nhất đề tài.
- | Đức Hòa <space><space> Gia Thuận <space><space>
-Hoàng Sinh| 
+| 1  | 15/04 - 22/04 | - Mỗi người tìm hiểu và đưa ra đề tài nhóm sẽ thực hiện.   
+- Trao đổi và thống nhất đề tài. | Đức Hòa  Gia Thuận  Hoàng Sinh| 
 

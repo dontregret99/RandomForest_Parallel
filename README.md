@@ -1,12 +1,12 @@
-# Lập trình song song ứng dụng 
+# Lập trình song song ứng dụng
 ## Song song hóa thuật toán Random Forest
 
 ## Thành viên:
 | No.  | Họ và tên | MSSV | Tài khoản Github |
 | ------------- | ------------- | ------------- | ------------- |
 | 1  | Đặng Thái Gia Thuận | 1712173 | [giathuan0506](https://github.com/giathuan0506)|
-| 2  | Lê Đức Hòa | 1712449 | [Dontregret9](https://github.com/Dontregret9)| 
-| 3  | Ngô Hoàng Sinh  | 1412457|  |
+| 2  | Lê Đức Hòa | 1712449 | [Dontregret9](https://github.com/Dontregret9)|
+| 3  | Ngô Hoàng Sinh  | 1412457|  | [HoangSinh](https://github.com/Lerylryl)
 
 ## Kế hoạch làm việc:
 

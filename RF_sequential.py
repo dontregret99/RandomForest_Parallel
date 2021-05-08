@@ -7,9 +7,42 @@ Preprocessing data:
     - 151 - 200: 4
     - 201 - 256: 5
 '''
-# -------------------------- code for training ----------------------------
 
-def Entropy(values_of_attribute, labels):
+# -------------------------- import --------------------------------------
+import numpy as np
+
+
+# -------------------------- code for training ----------------------------
+'''
+Calculate entropy in a node
+  - datanode (np.array): just get 2 column: attribute_to_split & label
+  - datanode[0]: values
+  - datanode[1]: labels
+'''
+
+def Entropy(datanode):
+
+  entropy = 0
+  parent_length = len(datanode[0])
+  # each unique value is a child node to calculate entropy
+  uniq_values = np.unique(datanode[0])
+
+  for v in uniq_values:
+    # get all rows have value is v
+    records = [[datanode[0][i],datanode[1][i]] for i in range(len(datanode[0])) if datanode[0][i] == v]
+
+    child_entropy = 0
+    # get all labels of child node
+    child_labels = [r[1] for r in records]
+    labels, counts = np.unique(child_labels, return_counts=True)
+
+    # if more than one label (else child_entropy = 0)
+    if len(counts) > 1:
+        child_length = len(child_labels)
+
+        for c in counts:
+            child_entropy = child_entropy -  (c/child_length)*np.log2(c/child_length)
+        entropy = entropy + (child_length/parent_length)*child_entropy
 
   return entropy
 

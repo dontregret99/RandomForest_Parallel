@@ -50,7 +50,7 @@ def Entropy(datanode):
 # select random data from dataset to train a Tree
 def Bootstrapping(dataset):
   index = range(0, len(dataset[0]))
-  random_index = np.random.choice(index, len(dataset[0]))
+  random_index = np.random.choice(index, len(dataset[0])-1)# the last column is label
   random_data = []
 
   for attribute in dataset:
@@ -72,9 +72,21 @@ def Attributes2BuildTree(dataset):
 
 
 # Attribute to create a new node or split (attribute that has minimum entropy)
-def Attribute2Split(dataset, attributes):
+def Attribute2Split(dataset):
+  index_of_attributes = Attributes2BuildTree(dataset)
+  attribute_split = 0 # index of attribute to split
 
-  return attribute_i
+  min_entropy = 1
+  for i in index_of_attributes:
+    child_data = []
+    child_data.append(dataset[i])
+    child_data.append(dataset[-1])
+    cur_entropy = Entropy(child_data)
+    if min_entropy > cur_entropy:
+      min_entropy = cur_entropy
+      attribute_split = i
+
+  return attribute_split
 
 
 # recursion to create a tree from a dataset

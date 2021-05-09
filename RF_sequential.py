@@ -48,7 +48,14 @@ def Entropy(datanode):
 
 
 # select random data from dataset to train a Tree
-def Bootstrapping(dataset, num_of_point_to_get):
+def Bootstrapping(dataset):
+  index = range(0, len(dataset[0]))
+  random_index = np.random.choice(index, len(dataset[0]))
+  random_data = []
+
+  for attribute in dataset:
+    column = [attribute[i] for i in random_index]
+    random_data.append(column)
 
   return random_data
 

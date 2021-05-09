@@ -62,7 +62,12 @@ def Bootstrapping(dataset):
 
 # select random attributes from dataset to train a Tree
 def Attributes2BuildTree(dataset):
+  attribute_count = 0
+  for i in dataset:
+    attribute_count = attribute_count + 1
+  num_of_select = int(np.sqrt(attribute_count))
 
+  attributes = np.random.choice(range(0,attribute_count), num_of_select)
   return attributes
 
 

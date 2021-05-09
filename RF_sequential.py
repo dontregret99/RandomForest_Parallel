@@ -10,29 +10,26 @@ Preprocessing data:
 
 # -------------------------- import --------------------------------------
 import numpy as np
-
+import pandas as pd
 
 # -------------------------- code for training ----------------------------
 '''
 Calculate entropy in a node
-  - datanode (np.array): just get 2 column: attribute_to_split & label
-  - datanode[0]: values
-  - datanode[1]: labels
+  - dataset (DataFrame): attr_1, attr_2,...., label
+  - attr_to_calc: name of column want to calculate entropy
 '''
-
-def Entropy(datanode):
+def Entropy(dataset, attr_to_calc):
 
   entropy = 0
-  parent_length = len(datanode[0])
+  parent_length = dataset.shape[0]
   # each unique value is a child node to calculate entropy
-  uniq_values = np.unique(datanode[0])
+  uniq_values = np.unique(dataset[attr_to_calc])
 
   for v in uniq_values:
     # get all rows have value is v
-    records = [[datanode[0][i],datanode[1][i]] for i in range(len(datanode[0])) if datanode[0][i] == v]
-
+    records = [[dataset[attr_to_calc][i], dataset['label'][i]] for i in range(parent_length) if dataset[attr_to_calc][i] == v]
     child_entropy = 0
-    # get all labels of child node
+    #get all labels of child node
     child_labels = [r[1] for r in records]
     labels, counts = np.unique(child_labels, return_counts=True)
 
@@ -48,40 +45,39 @@ def Entropy(datanode):
 
 
 # select random data from dataset to train a Tree
+# input: DataFrame
+# output: DataFrame
+
 def Bootstrapping(dataset):
-  index = range(0, len(dataset[0]))
-  random_index = np.random.choice(index, len(dataset[0])-1)# the last column is label
-  random_data = []
+  index = range(0, dataset.shape[0])
+  random_index = np.random.choice(index, dataset.shape[0])
 
-  for attribute in dataset:
-    column = [attribute[i] for i in random_index]
-    random_data.append(column)
+  random_data = [dataset.iloc[i] for i in random_index]
 
-  return random_data
+  return pd.DataFrame(data = random_data, columns = dataset.columns)
 
 
 # select random attributes from dataset to train a Tree
+# input: DataFrame
+# output: all columns name to build tree
 def Attributes2BuildTree(dataset):
-  attribute_count = 0
-  for i in dataset:
-    attribute_count = attribute_count + 1
-  num_of_select = int(np.sqrt(attribute_count))
+  columns = dataset.columns[:-1] # Can't choose column 'label' to build tree
+  num_of_select = int(np.sqrt(len(columns)))
 
-  attributes = np.random.choice(range(0,attribute_count), num_of_select)
+  attributes = np.random.choice(columns, num_of_select)
   return attributes
 
 
 # Attribute to create a new node or split (attribute that has minimum entropy)
+# input: DataFrame
+# output: name of attribute will be use to split
 def Attribute2Split(dataset):
-  index_of_attributes = Attributes2BuildTree(dataset)
-  attribute_split = 0 # index of attribute to split
+  attributes = Attributes2BuildTree(dataset)
+  attribute_split = '' # name of attribute to split
 
   min_entropy = 1
-  for i in index_of_attributes:
-    child_data = []
-    child_data.append(dataset[i])
-    child_data.append(dataset[-1])
-    cur_entropy = Entropy(child_data)
+  for i in attributes:
+    cur_entropy = Entropy(dataset, i)
     if min_entropy > cur_entropy:
       min_entropy = cur_entropy
       attribute_split = i
@@ -92,12 +88,16 @@ def Attribute2Split(dataset):
 # recursion to create a tree from a dataset
 def Tree(dataset):
   tree = []
-  attributes = Attributes2BuildTree(dataset)
-  new_node = Attribute2Split(dataset, attributes)
+  new_node = Attribute2Split(dataset)
+  print(new_node)
   tree.append(new_node)
 
-  for value in AllValueOfCurrentAttribute(dataset, new_node[0]):
-    child_dataset = [d for d in dataset if d[new_node[1]] == value]
+  child_values = np.unique(dataset[new_node]) # all distinct values --> all child branches
+  if len(child_values) < 2:
+    return tree
+  for value in child_values:
+    child_dataset = dataset[dataset[new_node] == value]
+    print(child_dataset)
     tree.append(Tree(child_dataset))
 
   return tree
@@ -109,5 +109,6 @@ def RandomForest(dataset):
   for t range(1,max_tree):
     tree_dataset = Bootstrapping(dataset)
     forest.append(Tree(tree_dataset))
+
 
   return forest

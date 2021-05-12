@@ -43,7 +43,7 @@
     <td>Đức Hòa</td>
   </tr>
   <tr>
-    <td rowspan="3">2</td>
+    <td rowspan="2">3-4</td>
     <td>30/04-12/05</td>
     <td>Mỗi người tự code 1 phiên bản tuần tự cho phần train</td>
     <td>Đức Hòa<br> Gia Thuận<br> Hoàng Sinh</td>
@@ -54,6 +54,7 @@
     <td>Gia Thuận</td>
   </tr>
   <tr>
+    <td rowspan="1">5</td>
     <td>13/05-19/05</td>
     <td>Merge code tuần tự phần train. Mỗi người tự code 1 phiên bản tuần tự cho phần dự đoán</td>
     <td>Đức Hòa<br> Gia Thuận<br> Hoàng Sinh</td>

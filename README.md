@@ -54,7 +54,6 @@
     <td>Gia Thuận</td>
   </tr>
   <tr>
-    <td rowspan="3">2</td>
     <td>13/05-19/05</td>
     <td>Merge code tuần tự phần train. Mỗi người tự code 1 phiên bản tuần tự cho phần dự đoán</td>
     <td>Đức Hòa<br> Gia Thuận<br> Hoàng Sinh</td>

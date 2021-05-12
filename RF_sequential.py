@@ -1,20 +1,23 @@
+# -*- coding: utf-8 -*-
+import random
+import pandas as pd
 import numpy as np
-'''
-Preprocessing data:
-  - Convert pixel to integer:
-    - 0 - 50 : 1
-    - 51 - 100: 2
-    - 101 - 150: 3
-    - 151 - 200: 4
-    - 201 - 256: 5
-'''
-# -------------------------- code for training ----------------------------
+from tensorflow.keras.datasets import fashion_mnist
 
-# def Entropy(values_of_attribute, labels):
+(x_train, y_train), (x_test, y_test) = fashion_mnist.load_data()
+x_train = (x_train / 255.0).reshape(-1, 784)
+x_test = (x_test / 255.0).reshape(-1, 784)
+train_df = pd.DataFrame(x_train)
+train_df['label'] = y_train
+test_df = pd.DataFrame(x_test)
+test_df['label'] = y_test
 
-#   return entropy
+X_train = train_df.drop(['label'], axis=1)
+y_train = train_df['label'].values
+X_test = test_df.drop(['label'], axis=1)
+y_test = test_df['label'].values
 
-def Entropy(labels):
+def entropy(labels):
   num_labels = len(labels)
   
   if num_labels <= 1:
@@ -31,44 +34,182 @@ def Entropy(labels):
 
   return entropy
 
+    
+def information_gain(left_child, right_child):
+    parent = left_child + right_child
+    IG_p = entropy(parent)
+    IG_l = entropy(left_child)
+    IG_r = entropy(right_child)
+    return IG_p - len(left_child) / len(parent) * IG_l - len(right_child) / len(parent) * IG_r
 
-# select random data from dataset to train a Tree
-def Bootstrapping(dataset, num_of_point_to_get):
+def draw_bootstrap(X_train, y_train):
+    print(len(X_train))
+    bootstrap_indices = list(np.random.choice(range(len(X_train)), len(X_train), replace = True))
+    # oob_indices = [i for i in range(len(X_train)) if i not in bootstrap_indices]
+    oob_indices = []
 
-  return random_data
+    X_bootstrap = X_train.iloc[bootstrap_indices].values
+    y_bootstrap = y_train[bootstrap_indices]
+    X_oob = X_train.iloc[oob_indices].values
+    y_oob = y_train[oob_indices]
+    return X_bootstrap, y_bootstrap, X_oob, y_oob
+
+def oob_score(tree, X_test, y_test):
+    mis_label = 0
+    for i in range(len(X_test)):
+        pred = predict_tree(tree, X_test[i])
+        if pred != y_test[i]:
+            mis_label += 1
+    return mis_label / len(X_test)
+
+def find_split_point(X_bootstrap, y_bootstrap, max_features):
+    feature_ls = list()
+    num_features = len(X_bootstrap[0])
+    while len(feature_ls) <= max_features:
+        feature_idx = random.sample(range(num_features), 1)
+        if feature_idx not in feature_ls:
+            feature_ls.extend(feature_idx)
+    best_info_gain = -999
+    node = None
+    for feature_idx in feature_ls:
+        for split_point in X_bootstrap[:,feature_idx]:
+            left_child = {'X_bootstrap': [], 'y_bootstrap': []}
+            right_child = {'X_bootstrap': [], 'y_bootstrap': []}
+        node['right_split'] = node['left_split'] = terminal_node(right_child)
+    else:
+            # split children for continuous variables
+            if type(split_point) in [int, float]:
+                for i, value in enumerate(X_bootstrap[:,feature_idx]):
+                    if value <= split_point:
+                        left_child['X_bootstrap'].append(X_bootstrap[i])
+                        left_child['y_bootstrap'].append(y_bootstrap[i])
+                    else:
+                        right_child['X_bootstrap'].append(X_bootstrap[i])
+                        right_child['y_bootstrap'].append(y_bootstrap[i])
+            # split children for categoric variables
+            else:
+                for i, value in enumerate(X_bootstrap[:,feature_idx]):
+                    if value == split_point:
+                        left_child['X_bootstrap'].append(X_bootstrap[i])
+                        left_child['y_bootstrap'].append(y_bootstrap[i])
+                    else:
+                        right_child['X_bootstrap'].append(X_bootstrap[i])
+                        right_child['y_bootstrap'].append(y_bootstrap[i])
+            
+            split_info_gain = information_gain(left_child['y_bootstrap'], right_child['y_bootstrap'])
+            if split_info_gain > best_info_gain:
+                best_info_gain = split_info_gain
+                left_child['X_bootstrap'] = np.array(left_child['X_bootstrap'])
+                right_child['X_bootstrap'] = np.array(right_child['X_bootstrap'])
+                node = {'information_gain': split_info_gain, 
+                        'left_child': left_child, 
+                        'right_child': right_child, 
+                        'split_point': split_point,
+                        'feature_idx': feature_idx}
+                
+    
+    return node
+
+def terminal_node(node):
+    y_bootstrap = node['y_bootstrap']
+    pred = max(y_bootstrap, key = y_bootstrap.count)
+    return pred
 
 
-# select random attributes from dataset to train a Tree
-def Attributes2BuildTree(dataset):
+def split_node(node, max_features, min_samples_split, max_depth, depth):
+    left_child = node['left_child']
+    right_child = node['right_child']    
 
-  return attributes
+    del(node['left_child'])
+    del(node['right_child'])
+    
+    if len(left_child['y_bootstrap']) == 0 or len(right_child['y_bootstrap']) == 0:
+        empty_child = {'y_bootstrap': left_child['y_bootstrap'] + right_child['y_bootstrap']}
+        node['left_split'] = terminal_node(empty_child)
+        node['right_split'] = terminal_node(empty_child)
+        return
+    
+    if depth >= max_depth:
+        node['left_split'] = terminal_node(left_child)
+        node['right_split'] = terminal_node(right_child)
+        return node
+    
+    if len(left_child['X_bootstrap']) <= min_samples_split:
+        node['left_split'] = node['right_split'] = terminal_node(left_child)
+    else:
+        node['left_split'] = find_split_point(left_child['X_bootstrap'], left_child['y_bootstrap'], max_features)
+        split_node(node['left_split'], max_depth, min_samples_split, max_depth, depth + 1)
+    if len(right_child['X_bootstrap']) <= min_samples_split:
+        node['rightoob_indices_split'] = node['left_split'] = terminal_node(right_child)
+    else:
+        node['right_split'] = find_split_point(right_child['X_bootstrap'], right_child['y_bootstrap'], max_features)
+        split_node(node['right_split'], max_features, min_samples_split, max_depth, depth + 1)
 
+def build_tree(X_bootstrap, y_bootstrap, max_depth, min_samples_split, max_features):
+    root_node = find_split_point(X_bootstrap, y_bootstrap, max_features)
+    split_node(root_node, max_features, min_samples_split, max_depth, 1)
+    return root_node
 
-# Attribute to create a new node or split (attribute that has minimum entropy)
-def Attribute2Split(dataset, attributes):
+def random_forest(X_train, y_train, n_estimators, max_features, max_depth, min_samples_split):
+    tree_ls = list()
+    oob_ls = list()
+    for i in range(n_estimators):
+        X_bootstrap, y_bootstrap, X_oob, y_oob = draw_bootstrap(X_train, y_train)
+        tree = build_tree(X_bootstrap, y_bootstrap, max_features, max_depth, min_samples_split)
+        tree_ls.append(tree)
+        oob_error = oob_score(tree, X_oob, y_oob)
+        oob_ls.append(oob_error)
+    print("OOB estimate: {:.2f}".format(np.mean(oob_ls)))
+    return tree_ls
 
-  return attribute_i
+def predict_tree(tree, X_test):
+    feature_idx = tree['feature_idx']
+    
+    if X_test[feature_idx] <= tree['split_point']:
+        if type(tree['left_split']) == dict:
+            return predict_tree(tree['left_split'], X_test)
+        else:
+            value = tree['left_split']
+            return value
+    else:
+        if type(tree['right_split']) == dict:
+            return predict_tree(tree['right_split'], X_test)
+        else:
+            return tree['right_split']
 
+def predict_rf(tree_ls, X_test):
+    pred_ls = list()
+    for i in range(len(X_test)):
+        ensemble_preds = [predict_tree(tree, X_test.values[i]) for tree in tree_ls]
+        final_pred = max(ensemble_preds, key = ensemble_preds.count)
+        pred_ls.append(final_pred)
+    return np.array(pred_ls)
 
-# recursion to create a tree from a dataset
-def Tree(dataset):
-  tree = []
-  attributes = Attributes2BuildTree(dataset)
-  new_node = Attribute2Split(dataset, attributes)
-  tree.append(new_node)
+if __name__ == '__main__':
+    n_estimators = 100
+    max_features = 3
+    max_depth = 3
+    min_samples_split = 2
 
-  for value in AllValueOfCurrentAttribute(dataset, new_node[0]):
-    child_dataset = [d for d in dataset if d[new_node[1]] == value]
-    tree.append(Tree(child_dataset))
+    model = random_forest(X_train, y_train, n_estimators=1, max_features=3, max_depth=3, min_samples_split=2)
 
-  return tree
+    preds = predict_rf(model, X_test)
 
+    acc = sum(preds == y_test) / len(y_test)
+    print("Testing accuracy: {}".format(np.round(acc,3)))
 
-# create a random forest from a dataset
-def RandomForest(dataset):
-  forest = []
-  for t range(1,max_tree):
-    tree_dataset = Bootstrapping(dataset)
-    forest.append(Tree(tree_dataset))
-
-  return forest
+    # what a tree look like (the first 3 nodes)
+    tree_1 = model[0]
+    for k in tree_1.keys():
+        if type(tree_1[k]) == dict:
+            print('{}: '.format(k))
+            for kk in tree_1[k].keys():
+                if type(tree_1[k][kk]) == dict:
+                    print('\t{}: '.format(kk))
+                    for kkk in tree_1[k][kk].keys():
+                        print('\t\t{}: {}'.format(kkk, tree_1[k][kk][kkk]))
+                    
+                else:
+                    print('\t{}: {}'.format(kk, tree_1[k][kk]))
+        else:
+            print('{}: {}'.format(k, tree_1[k]))

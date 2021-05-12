@@ -37,23 +37,23 @@
     <td>- Trao đổi những gì đã tìm hiểu, các phiên bản.<br>- Tổng hợp nội dung phần 1 vào file báo cáo. (Đức Hòa)</td>
     <td>Đức Hòa<br> Gia Thuận<br> Hoàng Sinh</td>
   </tr>
-    <tr>
+  <tr>
     <td>29/04</td>
     <td>Báo cáo tiến độ lần 1</td>
     <td>Đức Hòa</td>
   </tr>
-    <tr>
+  <tr>
     <td rowspan="3">2</td>
     <td>30/04-12/05</td>
     <td>Mỗi người tự code 1 phiên bản tuần tự cho phần train</td>
     <td>Đức Hòa<br> Gia Thuận<br> Hoàng Sinh</td>
-   </tr>
-    <tr>
+  </tr>
+  <tr>
     <td>13/05</td>
     <td>Báo cáo tiến độ lần 2</td>
-    <td>G</td>
+    <td>Gia Thuận</td>
   </tr>
-    <tr>
+  <tr>
     <td rowspan="3">2</td>
     <td>13/05-19/05</td>
     <td>Merge code tuần tự phần train. Mỗi người tự code 1 phiên bản tuần tự cho phần dự đoán</td>

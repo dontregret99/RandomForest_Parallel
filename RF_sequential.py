@@ -12,6 +12,13 @@ Preprocessing data:
 import numpy as np
 import pandas as pd
 
+# ---------------------------- data preprocessing ------------------------
+def preprocessing(data):
+  for c in data.columns:
+    column = [int(i/50) for i in data[c]]
+    data[c] = column
+  return data
+
 # -------------------------- code for training ----------------------------
 '''
 Calculate entropy in a node

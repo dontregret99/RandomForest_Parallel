@@ -15,8 +15,9 @@ import pandas as pd
 # ---------------------------- data preprocessing ------------------------
 def preprocessing(data):
   for c in data.columns:
-    column = [int(i/50) for i in data[c]]
-    data[c] = column
+    if c != 'label':
+      column = [int(i/50) for i in data[c]]
+      data[c] = column
   return data
 
 # -------------------------- code for training ----------------------------

@@ -16,8 +16,8 @@ import pandas as pd
 def preprocessing(data):
   for c in data.columns:
     if c != 'label':
-      column = [int(i/50) for i in data[c]]
-      data[c] = column
+        column = [int(i/50) for i in data[c]]
+        data[c] = column
   return data
 
 # -------------------------- code for training ----------------------------
@@ -32,25 +32,21 @@ def Entropy(dataset, attr_to_calc):
   parent_length = dataset.shape[0]
   # each unique value is a child node to calculate entropy
   uniq_values = np.unique(dataset[attr_to_calc])
-
   for v in uniq_values:
     # get all rows have value is v
     records = [[dataset[attr_to_calc][i], dataset['label'][i]] for i in range(parent_length) if dataset[attr_to_calc][i] == v]
+
     child_entropy = 0
     #get all labels of child node
     child_labels = [r[1] for r in records]
     labels, counts = np.unique(child_labels, return_counts=True)
-
     # if more than one label (else child_entropy = 0)
     if len(counts) > 1:
         child_length = len(child_labels)
-
         for c in counts:
-            child_entropy = child_entropy -  (c/child_length)*np.log2(c/child_length)
+          child_entropy = child_entropy -  (c/child_length)*np.log10(c/child_length)
         entropy = entropy + (child_length/parent_length)*child_entropy
-
   return entropy
-
 
 # select random data from dataset to train a Tree
 # input: DataFrame
@@ -61,9 +57,9 @@ def Bootstrapping(dataset):
   random_index = np.random.choice(index, dataset.shape[0])
 
   random_data = [dataset.iloc[i] for i in random_index]
-
-  return pd.DataFrame(data = random_data, columns = dataset.columns)
-
+  bootstrapping_dataset = pd.DataFrame(data = random_data, columns = dataset.columns)
+  bootstrapping_dataset.reset_index(drop=True, inplace=True)
+  return bootstrapping_dataset
 
 # select random attributes from dataset to train a Tree
 # input: DataFrame
@@ -89,7 +85,6 @@ def Attribute2Split(dataset):
     if min_entropy > cur_entropy:
       min_entropy = cur_entropy
       attribute_split = i
-
   return attribute_split
 
 
@@ -97,26 +92,23 @@ def Attribute2Split(dataset):
 def Tree(dataset):
   tree = []
   new_node = Attribute2Split(dataset)
-  print(new_node)
   tree.append(new_node)
 
-  child_values = np.unique(dataset[new_node]) # all distinct values --> all child branches
+  child_values = np.unique(dataset[new_node]) # all distinct values --> all -child branches
   if len(child_values) < 2:
     return tree
   for value in child_values:
     child_dataset = dataset[dataset[new_node] == value]
-    print(child_dataset)
-    tree.append(Tree(child_dataset))
+    child_dataset.reset_index(drop=True, inplace=True)
+    tree.append([value, Tree(child_dataset)])
 
   return tree
-
 
 # create a random forest from a dataset
 def RandomForest(dataset):
   forest = []
-  for t range(1,max_tree):
+  for t in range(1,max_tree):
     tree_dataset = Bootstrapping(dataset)
     forest.append(Tree(tree_dataset))
-
 
   return forest

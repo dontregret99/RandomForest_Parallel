@@ -186,10 +186,12 @@ if __name__ == '__main__':
 
     print(X_train.info())
 
+    #Hyper params
     n_estimators = 10
     max_features = 10
     max_depth = 5
     min_samples_split = 2
+    #Model training
     model = random_forest(X_train, y_train, n_estimators=n_estimators, max_features=max_features, max_depth=max_depth, min_samples_split=min_samples_split)
 
     #save
@@ -197,15 +199,18 @@ if __name__ == '__main__':
     # load
     loaded_model = joblib.load("my_random_forest.joblib")
 
+    #Create test dataframe
     X_test = test_df.drop(['label'], axis=1)
     y_test = test_df['label'].values
 
+    #Predict on test data
     preds = predict_rf(loaded_model, X_test)
 
+    #Caculate accuracy
     acc = sum(preds == y_test) / len(y_test)
-    print("Testing accuracy: {}".format(np.round(acc,3)))
+    print("Testing accuracy: {}".format(np.round(acc,3))) #RESULT 0.643
 
-    # what a tree look like (the first 3 nodes)df =
+    # what a tree look like (the first 3 nodes)
     tree_1 = model[0]
     for k in tree_1.keys():
         if type(tree_1[k]) == dict:
@@ -222,6 +227,7 @@ if __name__ == '__main__':
             print('{}: {}'.format(k, tree_1[k]))
 
 
+    #Define sklearn model with the same hyper params above
     sklearn_model = RandomForestClassifier(n_estimators = n_estimators, 
                                        max_features=max_features, 
                                        max_depth=max_depth, 
@@ -229,8 +235,9 @@ if __name__ == '__main__':
                                        bootstrap=True, 
                                        oob_score=True)
 
+    #Train model
     sklearn_model.fit(X_train, y_train)
-
+    #Predict on test data
     sklearn_preds = sklearn_model.predict(X_test)
 
     #save
@@ -238,5 +245,6 @@ if __name__ == '__main__':
     # load
     loaded_model = joblib.load("sklearn_fr.joblib")
 
+    #Calculate accuracy
     acc = sum(sklearn_preds == y_test) / len(y_test)
-    print("Sklearn accuracy: {}".format(np.round(acc,3)))
+    print("Sklearn accuracy: {}".format(np.round(acc,3))) #RESULT: 0.741

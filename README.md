@@ -59,5 +59,34 @@
     <td>Merge code tuần tự phần train. Mỗi người tự code 1 phiên bản tuần tự cho phần dự đoán</td>
     <td>Đức Hòa<br> Gia Thuận<br> Hoàng Sinh</td>
   </tr>
+  <tr>
+    <td rowspan="2">6</td>
+    <td>22/05-29/05</td>
+    <td>Code phiên bản tuần tự cho predict. Merge code</td>
+    <td>Đức Hòa<br> Gia Thuận<br> Hoàng Sinh</td>
+  </tr>
+  <tr>
+    <td>27/05</td>
+    <td>Báo cáo tiến độ lần 3 </td>
+    <td>Hoàng Sinh</td>
+  </tr>
+  <tr>
+    <td rowspan="2">7</td>
+    <td>29/05 - 03/06</td>
+    <td>Đánh giá, tối ưu phiên bản tuần tự </td>
+    <td>Đức Hòa<br> Gia Thuận<br> Hoàng Sinh</td>
+  </tr>
+  <tr>
+    <td>03/06</td>
+    <td>Báo cáo tiến độ lần 4 </td>
+    <td>Đức Hòa</td>
+  </tr>
+   <tr>
+    <td>8</td>
+    <td>03/06 - 10/06</td>
+    <td>Bắt đầu thực hiện phiên bản song song </td>
+    <td>Đức Hòa<br> Gia Thuận<br> Hoàng Sinh</td>
+  </tr>
+
 </tbody>
 </table>

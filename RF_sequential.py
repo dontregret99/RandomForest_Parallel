@@ -96,6 +96,14 @@ def Tree(dataset):
 
   child_values = np.unique(dataset[new_node]) # all distinct values --> all -child branches
   if len(child_values) < 2:
+    labels, counts = np.unique(dataset['label'], return_counts=True)
+    max_count = counts[0]
+    max_label = labels[0]
+    for i in range(len(counts)):
+      if counts[i] > max_count:
+        max_count = counts[i]
+        max_label = labels[i]
+    tree.append(['Leaf', max_label])
     return tree
   for value in child_values:
     child_dataset = dataset[dataset[new_node] == value]
@@ -116,8 +124,8 @@ def RandomForest(dataset):
 
 # ------------------------------- code for prediction ----------------------------------------
 def tree_prediction(datapoint, tree):
-  if len(tree) < 2: # this is leaf node
-    return tree[0]
+  if tree[1][0] == 'Leaf': # this is leaf node
+    return tree[1][1]
   value = datapoint[tree[0]].values[0]
   datapoint = datapoint.drop(columns = [tree[0]])
   tree.remove(tree[0])

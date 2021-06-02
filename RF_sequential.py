@@ -112,3 +112,42 @@ def RandomForest(dataset):
     forest.append(Tree(tree_dataset))
 
   return forest
+
+
+# ------------------------------- code for prediction ----------------------------------------
+def tree_prediction(datapoint, tree):
+  if len(tree) < 2: # this is leaf node
+    return tree[0]
+  value = datapoint[tree[0]].values[0]
+  datapoint = datapoint.drop(columns = [tree[0]])
+  tree.remove(tree[0])
+
+  available_values = [branch[0] for branch in tree]
+  available_values.sort()
+
+  value_2_split = available_values[-1]
+  for v in available_values:
+    if (value == v) or (value < v):
+        value_2_split = v
+        break
+
+  for b in tree:
+    if b[0] == value_2_split:
+      return tree_prediction(datapoint, b[1])
+
+
+def prediction(datapoint, forest):
+  tree_results = []
+  for tree in forest:
+    tree_results.append(tree_prediction(datapoint, tree))
+
+  labels, counts = np.unique(tree_results, return_counts=True)
+
+  max_voted = counts[0]
+  position = 0
+  for i in range(len(counts)):
+    if counts[i] > max_voted:
+      postion = i
+      max_voted = counts[i]
+
+  return labels[position]
